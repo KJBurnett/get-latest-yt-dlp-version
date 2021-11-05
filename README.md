@@ -11,6 +11,7 @@ python get-latest-yt-dlp-version.py
 Option #2
 ```
 python -get-latest-yt-dlp-version.py "C:\Users\specialDownloads"
+```
 
 Curret Version:
 * Works only for windows yt-dlp.exe
