@@ -12,15 +12,20 @@
 # resultLocation = getLatestYoutubeDlVersion()
 
 import requests
+import sys
 import os
 import re
 
 # Set downloadPath to the directory where you want youtube-dl.exe to be downloaded to.
-downloadPath = "C:/Users/user/Downloads/gohere"
 githubDownloadsLatest = "https://github.com/yt-dlp/yt-dlp/releases/latest"
-downloadRegex = r"https://github.com/yt-dlp/yt-dlp/releases/download/\d+\.\d+\.\d+/yt-dlp.exe"
+downloadRegex = r"/yt-dlp/yt-dlp/releases/download/\d+\.\d+\.\d+/yt-dlp.exe"
 currentVersionFileName = "current_version.txt"
 
+def getArguments():
+    if len(sys.argv) > 1:
+        return sys.argv[1] # second index is the url string.
+    else:
+        return "C:/Users/Downloads"
 
 def downloadFile(downloadPath, url):
     print("Downloading new exe...")
@@ -30,18 +35,17 @@ def downloadFile(downloadPath, url):
         with open(fileName, "wb") as f:
             for chunk in r.iter_content(chunk_size=8192):
                 f.write(chunk)
-    print("Download complete!\n youtube-dl.exe downloaded to: " + downloadPath)
+    print("Download complete!\nyt-dlp.exe downloaded to: " + downloadPath)
     return fileName
 
-def getLatestVersion():
+def getLatestVersion(downloadPath):
     print("Checking github project for the latest yt-dlp.exe version...")
-    downloadsPage = requests.get(githubDownloadsLatest)
-    url = re.search(downloadRegex, downloadsPage)[0]
+    downloadsPage = requests.get(githubDownloadsLatest).text
+    url = "https://github.com" + re.search(downloadRegex, downloadsPage)[0]
     
     if url:
         print("Found url: {0}".format(url))
-        siteVersion = url.split("/download/")[1].split("/yt-dlp.exe")[0]
-
+        siteVersion = re.findall('\d+\.\d+\.\d+', url)[0]
         currentVersion = ""
         # Create current_version.txt if it does not already exist.
         if not os.path.isfile(currentVersionFileName):
@@ -67,4 +71,5 @@ def getLatestVersion():
         print("Error, yt-dlp.exe url not found on page.")
 
 if __name__ == '__main__':
-   getLatestVersion()
+    downloadPath = getArguments()
+    getLatestVersion(downloadPath)
