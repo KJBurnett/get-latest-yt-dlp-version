@@ -21,11 +21,13 @@ githubDownloadsLatest = "https://github.com/yt-dlp/yt-dlp/releases/latest"
 downloadRegex = r"/yt-dlp/yt-dlp/releases/download/\d+\.\d+\.\d+/yt-dlp.exe"
 currentVersionFileName = "current_version.txt"
 
+
 def getArguments():
     if len(sys.argv) > 1:
-        return sys.argv[1] # second index is the url string.
+        return sys.argv[1]  # second index is the url string.
     else:
         return "C:/Users/Downloads"
+
 
 def downloadFile(downloadPath, url):
     print("Downloading new exe...")
@@ -38,14 +40,15 @@ def downloadFile(downloadPath, url):
     print("Download complete!\nyt-dlp.exe downloaded to: " + downloadPath)
     return fileName
 
+
 def getLatestVersion(downloadPath):
     print("Checking github project for the latest yt-dlp.exe version...")
     downloadsPage = requests.get(githubDownloadsLatest).text
     url = "https://github.com" + re.search(downloadRegex, downloadsPage)[0]
-    
+
     if url:
         print("Found url: {0}".format(url))
-        siteVersion = re.findall('\d+\.\d+\.\d+', url)[0]
+        siteVersion = re.findall("\d+\.\d+\.\d+", url)[0]
         currentVersion = ""
         # Create current_version.txt if it does not already exist.
         if not os.path.isfile(currentVersionFileName):
@@ -66,10 +69,11 @@ def getLatestVersion(downloadPath):
         else:
             alreadyExistsMsg = "Already on latest version of yt-dlp.exe\n\nEnd of Line."
             print(alreadyExistsMsg)
-            return(alreadyExistsMsg)
+            return alreadyExistsMsg
     else:
         print("Error, yt-dlp.exe url not found on page.")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     downloadPath = getArguments()
     getLatestVersion(downloadPath)
