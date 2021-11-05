@@ -26,7 +26,9 @@ def getArguments():
     if len(sys.argv) > 1:
         return sys.argv[1]  # second index is the url string.
     else:
-        return "C:/Users/Downloads"
+        defaultPath = "C:/Users/Downloads"
+        print("No downloads path argument found. Defaulting to {0}".format(defaultPath))
+        return defaultPath
 
 
 def downloadFile(downloadPath, url):
